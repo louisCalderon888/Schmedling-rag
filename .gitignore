@@ -1,0 +1,22 @@
+# PDFs (large, personal material)
+pdfs_schmedling/
+
+# FAISS index (can be regenerated with ingest.py)
+faiss_index/
+
+# Telegram session
+*.session
+phone_code_hash.txt
+needs_2fa.txt
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# Telegram export
+telegram_export/
+
+# OS
+.DS_Store

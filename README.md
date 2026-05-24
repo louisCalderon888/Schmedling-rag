@@ -1,3 +1,14 @@
+---
+title: Chat Enseñanzas Schmedling
+emoji: 🦋
+colorFrom: blue
+colorTo: purple
+sdk: gradio
+sdk_version: "6.14.0"
+app_file: app.py
+pinned: false
+---
+
 # Schmedling RAG — Chat de Enseñanzas de Gerardo Schmedling Torres
 
 Chat inteligente que responde con **citas textuales** de las enseñanzas de Gerardo Schmedling Torres, basado en los materiales de la Escuela de Magia del Amor.
@@ -7,75 +18,47 @@ Chat inteligente que responde con **citas textuales** de las enseñanzas de Gera
 - **LangChain** (LCEL) — Orquestación RAG
 - **NVIDIA AI Endpoints** (Llama 3.1 70B) — LLM
 - **FAISS** — Vector Store (búsqueda semántica)
-- **PyMuPDF** — Parseo de PDFs
 - **sentence-transformers** — Embeddings multilingües
 - **Gradio** — Frontend/Chat UI
 
-## Estructura del Proyecto
+## Configuración
 
-```
-schmedling-rag/
-├── descargar_pdfs_telegram.py   # Descarga PDFs de canales de Telegram
-├── ingest.py                    # Parsea PDFs → chunks → embeddings → FAISS
-├── app.py                       # App de chat (RAG + Gradio)
-├── requirements.txt             # Dependencias
-├── pdfs_schmedling/             # PDFs por módulo (se genera, no se sube a git)
-├── faiss_index/                 # Índice vectorial (se genera, no se sube a git)
-└── README.md
-```
+### Variable de entorno requerida
 
-## Inicio Rápido
+En Hugging Face Spaces, configura el secreto `NVIDIA_API_KEY` en Settings → Repository secrets.
 
-### 1. Instalar dependencias
+Obtén tu API key gratis en https://build.nvidia.com
+
+### Desarrollo local
 
 ```bash
 pip install -r requirements.txt
-```
-
-### 2. Descargar PDFs de Telegram
-
-```bash
-export TELEGRAM_API_ID=tu_api_id
-export TELEGRAM_API_HASH=tu_api_hash
-export TELEGRAM_PHONE=+57XXXXXXXXXX
-
-python descargar_pdfs_telegram.py
-```
-
-Obtén `api_id` y `api_hash` en https://my.telegram.org → "API Development Tools".
-
-### 3. Crear el índice vectorial
-
-```bash
-python ingest.py
-```
-
-Esto procesa los 143 PDFs → 12,601 páginas → 68,783 chunks indexados en FAISS.
-
-### 4. Lanzar el chat
-
-```bash
-export NVIDIA_API_KEY=nvapi-xxxxx   # Obtén gratis en https://build.nvidia.com
+export NVIDIA_API_KEY=nvapi-xxxxx
 python app.py
 ```
 
-Abre http://localhost:7860 en tu navegador.
+## Estructura
 
-## Ejemplo de uso
+```
+schmedling-rag/
+├── app.py                       # App de chat (RAG + Gradio)
+├── requirements.txt             # Dependencias
+├── faiss_index/                 # Índice vectorial FAISS
+│   ├── index.faiss
+│   └── index.pkl
+├── descargar_pdfs_telegram.py   # Script para descargar PDFs (offline)
+├── ingest.py                    # Pipeline de ingesta (offline)
+└── README.md
+```
 
-**Pregunta:** ¿Qué es la Aceptología?
+## Regenerar el índice FAISS
 
-**Respuesta:**
-> La Aceptología es una Nueva Ciencia que, cuando estamos listos para comprenderla, permite cumplir el propósito general que tienen todos los seres humanos, para ENCONTRAR PLENA SATISFACCIÓN EN SUS VIDAS.
-> (Fuente: 07-Aceptologia completo Transcripciones Actualizada 2026.pdf, Módulo: 07_Aceptologia, Página: 5)
-
-## Configuración alternativa (OpenAI)
+Si necesitas regenerar el índice con nuevo material:
 
 ```bash
-export LLM_BASE_URL=https://api.openai.com/v1
-export LLM_MODEL=gpt-4o-mini
-export OPENAI_API_KEY=sk-xxxxx
-python app.py
+pip install pymupdf telethon
+python descargar_pdfs_telegram.py   # Descargar PDFs de Telegram
+python ingest.py                     # Crear índice FAISS
 ```
 
 ## Módulos de E.M.A (Escuela de Magia del Amor)

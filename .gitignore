@@ -1,8 +1,8 @@
 # PDFs (large, personal material)
 pdfs_schmedling/
 
-# FAISS index (can be regenerated with ingest.py)
-faiss_index/
+# FAISS index tracked via Git LFS for HF Spaces deployment
+# faiss_index/
 
 # Telegram session
 *.session
